@@ -2,25 +2,74 @@
 <html>
 <head>
 <title>Gabriela</title>
+
 <style>
 body {
-background: black;
-color: white;
-font-family: serif;
-text-align: center;
-padding-top: 20%;
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at center, #000000 0%, #050505 100%);
+  color: white;
+  font-family: "Times New Roman", serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.container {
+  animation: fadeIn 3s ease forwards;
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: normal;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+p {
+  font-size: 20px;
+  opacity: 0;
+  animation: fadeInText 4s ease forwards;
+  animation-delay: 2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInText {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>
+
 </head>
+
 <body>
+
+<div class="container">
 
 <h1>Gabriela</h1>
 
 <p>
-You are the reason my world has gravity.
-Everything falls toward you.
+You are the reason my world has gravity.<br>
+Everything falls toward you.<br>
 Everything begins with you.
 </p>
+
+</div>
 
 </body>
 </html>
