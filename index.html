@@ -1,75 +1,627 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Gabriela</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sleep Mastery</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #22d3ee;
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --border: #1f2937;
+    }
 
-<style>
-body {
-  margin: 0;
-  height: 100vh;
-  background: radial-gradient(circle at center, #000000 0%, #050505 100%);
-  color: white;
-  font-family: "Times New Roman", serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.container {
-  animation: fadeIn 3s ease forwards;
-}
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #020617 0%, #0f172a 35%, #0b1224 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-h1 {
-  font-size: 48px;
-  font-weight: normal;
-  margin-bottom: 20px;
-  letter-spacing: 2px;
-}
+    .app {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 16px 14px 32px;
+    }
 
-p {
-  font-size: 20px;
-  opacity: 0;
-  animation: fadeInText 4s ease forwards;
-  animation-delay: 2s;
-}
+    h1 {
+      margin: 8px 0 4px;
+      font-size: 1.45rem;
+    }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    .subtitle {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
 
-@keyframes fadeInText {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-</style>
+    .card {
+      background: rgba(17, 24, 39, 0.94);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(2px);
+    }
 
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+      font: inherit;
+      color: var(--text);
+      background: #0b1224;
+      border: 1px solid #2b3549;
+      border-radius: 10px;
+      padding: 10px;
+      width: 100%;
+    }
+
+    input[readonly] {
+      color: #cbd5e1;
+      background: #0a1328;
+      border-style: dashed;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .small {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: -2px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    button {
+      font-weight: 600;
+      background: linear-gradient(180deg, #06b6d4 0%, #0891b2 100%);
+      border: none;
+      color: #00212b;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid #334155;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 0.86rem;
+      color: #86efac;
+      min-height: 1.2em;
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: 0.74rem;
+      border-radius: 999px;
+      padding: 5px 8px;
+      margin: 0 4px 6px 0;
+      border: 1px solid #334155;
+      color: #dbeafe;
+      background: #0f172a;
+    }
+
+    .pill.warn {
+      border-color: #b45309;
+      color: #fde68a;
+      background: #1c1917;
+    }
+
+    .pill.bad {
+      border-color: #dc2626;
+      color: #fecaca;
+      background: #1f1418;
+    }
+
+    .pill.good {
+      border-color: #15803d;
+      color: #bbf7d0;
+      background: #102218;
+    }
+
+    .report {
+      white-space: pre-wrap;
+      line-height: 1.4;
+      font-size: 0.92rem;
+    }
+
+    @media (min-width: 760px) {
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <main class="app">
+    <h1>Sleep Mastery</h1>
+    <p class="subtitle">Mobile-first, voice-friendly daily logging and trend detection (all local, no external APIs).</p>
 
-<div class="container">
+    <form id="sleepForm">
+      <section class="card">
+        <h2>Core Sleep Timing</h2>
+        <div class="grid two">
+          <div class="field">
+            <label for="logDate">Log Date</label>
+            <input id="logDate" type="date" required />
+          </div>
+          <div class="field">
+            <label for="wakeAnchor">Wake Anchor (target)</label>
+            <input id="wakeAnchor" type="time" required />
+          </div>
+          <div class="field">
+            <label for="actualWake">Actual Wake Time</label>
+            <input id="actualWake" type="time" required />
+          </div>
+          <div class="field">
+            <label for="lightsOut">Lights Out Time</label>
+            <input id="lightsOut" type="time" required />
+          </div>
+          <div class="field">
+            <label for="sleepOnset">Estimated Sleep Onset Time</label>
+            <input id="sleepOnset" type="time" required />
+          </div>
+          <div class="field">
+            <label for="sleepLatency">Sleep Latency (auto, min)</label>
+            <input id="sleepLatency" type="number" readonly />
+          </div>
+          <div class="field">
+            <label for="totalSleep">Estimated Total Sleep (auto, hrs)</label>
+            <input id="totalSleep" type="text" readonly />
+          </div>
+          <div class="field">
+            <label for="sleepEfficiency">Sleep Efficiency Estimate (auto %)</label>
+            <input id="sleepEfficiency" type="text" readonly />
+          </div>
+          <div class="field">
+            <label for="anchorDeviation">Anchor Deviation (auto, min)</label>
+            <input id="anchorDeviation" type="number" readonly />
+          </div>
+        </div>
+      </section>
 
-<h1>Gabriela</h1>
+      <section class="card">
+        <h2>Morning State</h2>
+        <div class="grid two">
+          <div class="field">
+            <label for="wakeQuality">Wake Quality (0-10)</label>
+            <input id="wakeQuality" type="number" min="0" max="10" step="1" required inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label for="activation">Post-Wake Activation (0-10)</label>
+            <input id="activation" type="number" min="0" max="10" step="1" required inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label for="layDowntime">Post-Wake Lay Downtime (minutes)</label>
+            <input id="layDowntime" type="number" min="0" step="1" required inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label for="interruptions">Night Interruptions (count)</label>
+            <input id="interruptions" type="number" min="0" step="1" required inputmode="numeric" />
+          </div>
+        </div>
+      </section>
 
-<p>
-You are the reason my world has gravity.<br>
-Everything falls toward you.<br>
-Everything begins with you.
-</p>
+      <section class="card">
+        <h2>Substances & Habits</h2>
+        <div class="grid two">
+          <div class="field">
+            <label for="lastCaffeineTime">Last Caffeine Time</label>
+            <input id="lastCaffeineTime" type="time" />
+          </div>
+          <div class="field">
+            <label for="lastCaffeineAmount">Last Caffeine Amount (mg)</label>
+            <input id="lastCaffeineAmount" type="number" min="0" step="1" inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label for="stimulantCompound">Last Stimulant Compound</label>
+            <input id="stimulantCompound" type="text" placeholder="e.g., Modafinil" />
+          </div>
+          <div class="field">
+            <label for="stimulantMg">Last Stimulant (mg)</label>
+            <input id="stimulantMg" type="number" min="0" step="1" inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label for="stimulantTime">Last Stimulant Time</label>
+            <input id="stimulantTime" type="time" />
+          </div>
+          <div class="field">
+            <label for="medCompound">Sleep Medication Compound</label>
+            <input id="medCompound" type="text" />
+          </div>
+          <div class="field">
+            <label for="medMg">Sleep Medication (mg)</label>
+            <input id="medMg" type="number" min="0" step="0.1" inputmode="decimal" />
+          </div>
+          <div class="field">
+            <label for="medTime">Sleep Medication Time</label>
+            <input id="medTime" type="time" />
+          </div>
+          <div class="field">
+            <label for="melatoninMg">Melatonin (mg)</label>
+            <input id="melatoninMg" type="number" min="0" step="0.1" inputmode="decimal" />
+          </div>
+          <div class="field">
+            <label for="melatoninTime">Melatonin Time</label>
+            <input id="melatoninTime" type="time" />
+          </div>
+          <div class="field">
+            <label for="screensLastHour">Screens Last Hour</label>
+            <select id="screensLastHour" required>
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="lightExposure">Light Exposure within 30 min of wake</label>
+            <select id="lightExposure" required>
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="lightMinutes">Light Exposure Minutes</label>
+            <input id="lightMinutes" type="number" min="0" step="1" required inputmode="numeric" />
+          </div>
+        </div>
+      </section>
 
-</div>
+      <section class="card">
+        <h2>Flags</h2>
+        <div id="flags"></div>
+      </section>
 
+      <section class="card">
+        <div class="actions">
+          <button type="submit">Save Daily Log</button>
+          <button type="button" class="secondary" id="refreshWeekly">Refresh Weekly Trend</button>
+        </div>
+        <div class="status" id="status"></div>
+      </section>
+    </form>
+
+    <section class="card">
+      <h2>Daily Summary Report</h2>
+      <div id="dailySummary" class="report">No report yet.</div>
+    </section>
+
+    <section class="card">
+      <h2>Weekly Trend Summary + Primary Bottlenecks</h2>
+      <div id="weeklySummary" class="report">No weekly trends yet.</div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'sleepMasteryLogs';
+
+    const ids = [
+      'logDate', 'wakeAnchor', 'actualWake', 'lightsOut', 'sleepOnset',
+      'wakeQuality', 'activation', 'layDowntime', 'interruptions',
+      'lastCaffeineTime', 'lastCaffeineAmount', 'stimulantCompound', 'stimulantMg', 'stimulantTime',
+      'medCompound', 'medMg', 'medTime', 'melatoninMg', 'melatoninTime',
+      'screensLastHour', 'lightExposure', 'lightMinutes'
+    ];
+
+    const els = Object.fromEntries(ids.map(id => [id, document.getElementById(id)]));
+    const sleepLatencyEl = document.getElementById('sleepLatency');
+    const totalSleepEl = document.getElementById('totalSleep');
+    const sleepEfficiencyEl = document.getElementById('sleepEfficiency');
+    const anchorDeviationEl = document.getElementById('anchorDeviation');
+    const flagsEl = document.getElementById('flags');
+    const statusEl = document.getElementById('status');
+    const dailySummaryEl = document.getElementById('dailySummary');
+    const weeklySummaryEl = document.getElementById('weeklySummary');
+
+    function toMinutes(timeStr) {
+      if (!timeStr) return null;
+      const [h, m] = timeStr.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function diffMinutes(start, end) {
+      if (start === null || end === null) return null;
+      let diff = end - start;
+      if (diff < 0) diff += 24 * 60;
+      return diff;
+    }
+
+    function signedAnchorDeviation(target, actual) {
+      if (target === null || actual === null) return null;
+      let delta = actual - target;
+      if (delta > 720) delta -= 1440;
+      if (delta < -720) delta += 1440;
+      return delta;
+    }
+
+    function formatHours(mins) {
+      return (mins / 60).toFixed(2);
+    }
+
+    function getLogs() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    }
+
+    function setLogs(logs) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+    }
+
+    function computeDerived() {
+      const lightsOut = toMinutes(els.lightsOut.value);
+      const sleepOnset = toMinutes(els.sleepOnset.value);
+      const actualWake = toMinutes(els.actualWake.value);
+      const wakeAnchor = toMinutes(els.wakeAnchor.value);
+
+      const sleepLatency = diffMinutes(lightsOut, sleepOnset);
+      const totalSleepMins = diffMinutes(sleepOnset, actualWake);
+      const timeInBedMins = diffMinutes(lightsOut, actualWake);
+      const anchorDeviation = signedAnchorDeviation(wakeAnchor, actualWake);
+      const sleepEfficiency = (totalSleepMins && timeInBedMins)
+        ? Math.min(100, Math.max(0, (totalSleepMins / timeInBedMins) * 100))
+        : null;
+
+      sleepLatencyEl.value = sleepLatency ?? '';
+      totalSleepEl.value = totalSleepMins !== null ? formatHours(totalSleepMins) : '';
+      sleepEfficiencyEl.value = sleepEfficiency !== null ? sleepEfficiency.toFixed(1) : '';
+      anchorDeviationEl.value = anchorDeviation ?? '';
+
+      const flags = deriveFlags({
+        lightsOut,
+        sleepOnset,
+        actualWake,
+        wakeAnchor,
+        sleepLatency,
+        totalSleepMins,
+        sleepEfficiency,
+        anchorDeviation
+      });
+      renderFlags(flags);
+
+      return { sleepLatency, totalSleepMins, sleepEfficiency, anchorDeviation, flags };
+    }
+
+    function deriveFlags(metrics) {
+      const flags = [];
+      const caffeineTime = toMinutes(els.lastCaffeineTime.value);
+      const stimTime = toMinutes(els.stimulantTime.value);
+      const lightsOut = metrics.lightsOut;
+
+      if (caffeineTime !== null && lightsOut !== null) {
+        const minsBeforeBed = diffMinutes(caffeineTime, lightsOut);
+        if (minsBeforeBed !== null && minsBeforeBed < 480) {
+          flags.push({ key: 'lateCaffeine', text: 'Late caffeine usage (<8h before bed)', severity: 'warn' });
+        }
+      }
+
+      if (stimTime !== null && lightsOut !== null) {
+        const minsBeforeBed = diffMinutes(stimTime, lightsOut);
+        if (minsBeforeBed !== null && minsBeforeBed < 720) {
+          flags.push({ key: 'lateStimulant', text: 'Late stimulant usage (<12h before bed)', severity: 'bad' });
+        }
+      }
+
+      if (metrics.anchorDeviation !== null && Math.abs(metrics.anchorDeviation) > 60) {
+        flags.push({ key: 'anchorDeviation', text: 'Large anchor deviation (>60 min)', severity: 'bad' });
+      }
+
+      const layDowntime = Number(els.layDowntime.value || 0);
+      if (layDowntime > 20) {
+        flags.push({ key: 'secondSleepRisk', text: 'Second sleep risk (wake delay >20 min)', severity: 'warn' });
+      }
+
+      if (!flags.length) {
+        flags.push({ key: 'clear', text: 'No major risk flags detected.', severity: 'good' });
+      }
+      return flags;
+    }
+
+    function renderFlags(flags) {
+      flagsEl.innerHTML = flags.map(f => `<span class="pill ${f.severity}">${f.text}</span>`).join('');
+    }
+
+    function safeNumber(v) {
+      const num = Number(v);
+      return Number.isFinite(num) ? num : null;
+    }
+
+    function createSummary(log) {
+      const polarity = log.anchorDeviation > 0 ? 'late' : 'early';
+      const deviationText = log.anchorDeviation === 0 ? 'on target'
+        : `${Math.abs(log.anchorDeviation)} min ${polarity}`;
+
+      return [
+        `Date: ${log.logDate}`,
+        `Wake anchor deviation: ${deviationText}`,
+        `Sleep latency: ${log.sleepLatency} min`,
+        `Estimated total sleep: ${formatHours(log.totalSleepMins)} h`,
+        `Sleep efficiency estimate: ${log.sleepEfficiency.toFixed(1)}%`,
+        `Wake quality: ${log.wakeQuality}/10 | Activation: ${log.activation}/10`,
+        `Night interruptions: ${log.interruptions} | Post-wake lay downtime: ${log.layDowntime} min`,
+        `Flags: ${log.flags.map(f => f.text).join('; ')}`
+      ].join('\n');
+    }
+
+    function generateWeeklySummary(logs) {
+      if (!logs.length) {
+        weeklySummaryEl.textContent = 'No logs yet for trend analysis.';
+        return;
+      }
+
+      const recent = [...logs].sort((a, b) => a.logDate.localeCompare(b.logDate)).slice(-7);
+      const avg = (arr, key) => arr.reduce((s, x) => s + (x[key] ?? 0), 0) / arr.length;
+      const rate = (predicate) => (recent.filter(predicate).length / recent.length) * 100;
+
+      const avgSleep = avg(recent, 'totalSleepMins') / 60;
+      const avgLatency = avg(recent, 'sleepLatency');
+      const avgEfficiency = avg(recent, 'sleepEfficiency');
+      const avgWakeQuality = avg(recent, 'wakeQuality');
+      const avgActivation = avg(recent, 'activation');
+
+      const lateCaffeinePct = rate(l => l.flags.some(f => f.key === 'lateCaffeine'));
+      const lateStimPct = rate(l => l.flags.some(f => f.key === 'lateStimulant'));
+      const anchorDriftPct = rate(l => l.flags.some(f => f.key === 'anchorDeviation'));
+      const secondSleepPct = rate(l => l.flags.some(f => f.key === 'secondSleepRisk'));
+
+      const bottlenecks = [
+        { issue: 'Anchor inconsistency', score: anchorDriftPct },
+        { issue: 'Second sleep risk (lay downtime)', score: secondSleepPct },
+        { issue: 'Late stimulant usage', score: lateStimPct },
+        { issue: 'Late caffeine usage', score: lateCaffeinePct },
+        { issue: 'High sleep latency (avg > 30m)', score: avgLatency > 30 ? Math.min(100, avgLatency) : 0 },
+        { issue: 'Low sleep efficiency (avg < 85%)', score: avgEfficiency < 85 ? 100 - avgEfficiency : 0 }
+      ].sort((a, b) => b.score - a.score).slice(0, 3);
+
+      weeklySummaryEl.textContent = [
+        `Logs analyzed: ${recent.length} (latest 7 days)`,
+        `Avg total sleep: ${avgSleep.toFixed(2)} h`,
+        `Avg sleep latency: ${avgLatency.toFixed(1)} min`,
+        `Avg sleep efficiency: ${avgEfficiency.toFixed(1)}%`,
+        `Avg wake quality: ${avgWakeQuality.toFixed(1)}/10`,
+        `Avg activation: ${avgActivation.toFixed(1)}/10`,
+        '',
+        'Flag frequencies:',
+        `- Late caffeine: ${lateCaffeinePct.toFixed(0)}%`,
+        `- Late stimulant: ${lateStimPct.toFixed(0)}%`,
+        `- Anchor deviation > 60 min: ${anchorDriftPct.toFixed(0)}%`,
+        `- Second sleep risk: ${secondSleepPct.toFixed(0)}%`,
+        '',
+        'Primary Bottlenecks (Top 3):',
+        ...bottlenecks.map((b, i) => `${i + 1}. ${b.issue} (score ${b.score.toFixed(1)})`)
+      ].join('\n');
+    }
+
+    function collectLog() {
+      const derived = computeDerived();
+
+      return {
+        logDate: els.logDate.value,
+        wakeAnchor: els.wakeAnchor.value,
+        actualWake: els.actualWake.value,
+        lightsOut: els.lightsOut.value,
+        sleepOnset: els.sleepOnset.value,
+        sleepLatency: derived.sleepLatency,
+        totalSleepMins: derived.totalSleepMins,
+        sleepEfficiency: derived.sleepEfficiency,
+        anchorDeviation: derived.anchorDeviation,
+        wakeQuality: safeNumber(els.wakeQuality.value) || 0,
+        activation: safeNumber(els.activation.value) || 0,
+        layDowntime: safeNumber(els.layDowntime.value) || 0,
+        interruptions: safeNumber(els.interruptions.value) || 0,
+        lastCaffeine: {
+          time: els.lastCaffeineTime.value,
+          amount: safeNumber(els.lastCaffeineAmount.value)
+        },
+        stimulant: {
+          compound: els.stimulantCompound.value,
+          mg: safeNumber(els.stimulantMg.value),
+          time: els.stimulantTime.value
+        },
+        sleepMedication: {
+          compound: els.medCompound.value,
+          mg: safeNumber(els.medMg.value),
+          time: els.medTime.value
+        },
+        melatonin: {
+          mg: safeNumber(els.melatoninMg.value),
+          time: els.melatoninTime.value
+        },
+        screensLastHour: els.screensLastHour.value,
+        lightExposure: {
+          within30Min: els.lightExposure.value,
+          minutes: safeNumber(els.lightMinutes.value) || 0
+        },
+        flags: derived.flags
+      };
+    }
+
+    function upsertLog(newLog) {
+      const logs = getLogs();
+      const idx = logs.findIndex(l => l.logDate === newLog.logDate);
+      if (idx >= 0) logs[idx] = newLog;
+      else logs.push(newLog);
+      setLogs(logs);
+      return logs;
+    }
+
+    function initDefaults() {
+      const today = new Date().toISOString().slice(0, 10);
+      els.logDate.value = today;
+      els.wakeAnchor.value = '07:00';
+      els.lightMinutes.value = '0';
+    }
+
+    document.getElementById('sleepForm').addEventListener('input', computeDerived);
+    document.getElementById('sleepForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const log = collectLog();
+
+      if (log.sleepLatency === null || log.totalSleepMins === null || log.anchorDeviation === null || log.sleepEfficiency === null) {
+        statusEl.textContent = 'Please fill required timing fields for auto-calculations.';
+        return;
+      }
+
+      const logs = upsertLog(log);
+      dailySummaryEl.textContent = createSummary(log);
+      generateWeeklySummary(logs);
+      statusEl.textContent = `Saved log for ${log.logDate}. Reports updated.`;
+    });
+
+    document.getElementById('refreshWeekly').addEventListener('click', () => {
+      generateWeeklySummary(getLogs());
+      statusEl.textContent = 'Weekly trend summary refreshed.';
+    });
+
+    initDefaults();
+    computeDerived();
+    generateWeeklySummary(getLogs());
+  </script>
 </body>
 </html>
